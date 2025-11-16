@@ -106,7 +106,7 @@ export function setupObserver(entryTypes: EntryTypeName[]): PerfCollector {
     }
   });
 
-  observer.observe({ entryTypes, buffered: false });
+  observer.observe({ entryTypes: entryTypes as PerformanceEntry['entryType'][], buffered: false });
 
   return {
     getAndClearSnapshots(): ObservedEntrySnapshot[] {

@@ -13,10 +13,10 @@ export async function waitForServer(url: string, timeoutMs = 10000): Promise<voi
   }
 }
 
-export function startExpressServer(): ChildProcess {
-  const child = spawn('npm', ['run', 'dev', '-w', '@d13z-node-perf/server-express'], {
+export function startWorkspace(workspace: string, script = 'dev', env: Record<string, string> = {}): ChildProcess {
+  const child = spawn('npm', ['run', script, '-w', workspace], {
     stdio: 'ignore',
-    env: process.env,
+    env: { ...process.env, ...env },
   });
   return child;
 }
