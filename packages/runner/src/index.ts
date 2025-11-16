@@ -92,12 +92,10 @@ async function run(): Promise<void> {
     delayMs: opts.delayMs,
   });
 
-  // eslint-disable-next-line no-console
   console.log(`Saved to ${base}`);
 }
 
 run().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });

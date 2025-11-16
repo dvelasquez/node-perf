@@ -2,7 +2,6 @@ import { spawn, type ChildProcess } from 'node:child_process';
 
 export async function waitForServer(url: string, timeoutMs = 10000): Promise<void> {
   const deadline = Date.now() + timeoutMs;
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
       const res = await fetch(url, { method: 'GET' });

@@ -13,16 +13,21 @@
     "dev:shared": "npm run dev -w @d13z-node-perf/shared",
     "dev:runner": "npm run dev -w @d13z-node-perf/runner",
     "dev:compare": "npm run dev -w @d13z-node-perf/compare",
-    "test": "npm run test -w @perf/tests"
+    "test": "npm run test -w @perf/tests",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@eslint/js": "9.39.1",
     "@types/node": "24.10.1",
+    "eslint": "9.39.1",
     "tsx": "4.20.6",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.4"
   },
   "volta": {
     "node": "24.11.1",
