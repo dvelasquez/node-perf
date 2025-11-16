@@ -1,5 +1,5 @@
 {
-  "name": "@perf/server-express",
+  "name": "@d13z-node-perf/server-express",
   "version": "0.1.0",
   "private": false,
   "type": "module",
@@ -12,7 +12,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@perf/shared": "0.1.0",
+    "@d13z-node-perf/shared": "0.1.0",
     "express": "5.1.0"
   },
   "devDependencies": {

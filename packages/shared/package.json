@@ -1,5 +1,5 @@
 {
-  "name": "@perf/shared",
+  "name": "@d13z-node-perf/shared",
   "version": "0.1.0",
   "private": false,
   "type": "module",

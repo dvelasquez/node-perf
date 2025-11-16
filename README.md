@@ -43,15 +43,15 @@ npm test
 
 ## Monorepo layout
 
-- `packages/shared`: `@perf/shared`
+- `packages/shared`: `@d13z-node-perf/shared`
   - Types: `HttpEntrySnapshot`, `ResourceEntrySnapshot`, `MeasureEntrySnapshot`
   - Helpers: `setupObserver()`, `serializeEntry()`, `writeNdjson()`, `writeJson()`
-- `packages/server-express`: `@perf/server-express`
+- `packages/server-express`: `@d13z-node-perf/server-express`
   - `GET /data`: fetches `https://jsonplaceholder.typicode.com/todos/1`
   - `GET /perf-entries`: returns `{ runInfo, entries }` and clears an in‑process buffer
-- `packages/runner`: `@perf/runner` (CLI `perf-runner`)
+- `packages/runner`: `@d13z-node-perf/runner` (CLI `perf-runner`)
   - Warms up, samples `/data`, drains `/perf-entries`, writes NDJSON + summary
-- `packages/compare`: `@perf/compare` (CLI `perf-compare`)
+- `packages/compare`: `@d13z-node-perf/compare` (CLI `perf-compare`)
   - Diffs entry-type counts between two run folders
 - `packages/tests`: `@perf/tests`
   - node:test based harness that spawns the server, samples, asserts, and stops it
@@ -91,6 +91,20 @@ Example NDJSON lines:
   - performs warmups and samples
   - asserts presence and shape of `http`, `measure`, `resource` entries
   - kills the server process reliably at the end
+
+## Notes and tips
+
+- Compare CLI paths:
+  - Prefer absolute paths when calling the compare CLI from the root:
+    - `npm run dev:compare -- $(pwd)/packages/runner/out/@d13z-node-perf/server-express/<A> $(pwd)/packages/runner/out/@d13z-node-perf/server-express/<B>`
+  - If using relative paths, run the CLI from the same working directory that contains the run folders, or pass absolute paths to avoid resolution issues inside the workspace.
+- Server cleanup:
+  - The test harness starts and stops the Express server for you.
+  - If you run the server manually (e.g., `npm run dev:express`), stop it when done:
+    - On macOS/Linux: find and kill by port, e.g. `lsof -i :3000` then `kill <PID>`.
+- Runner output:
+  - Files are written under `packages/runner/out/@d13z-node-perf/server-express/<timestamp>/`.
+  - `entries.ndjson` lines contain both `runInfo` and the normalized `entry` for easier post-processing.
 
 ## Performance Entry Notes
 

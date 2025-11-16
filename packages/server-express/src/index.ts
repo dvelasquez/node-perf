@@ -13,7 +13,7 @@ import {
   setupObserver,
   serializeEntry,
   type EntryTypeName,
-} from '@perf/shared';
+} from '@d13z-node-perf/shared';
 
 const PORT = Number.parseInt(process.env.PORT ?? '3000', 10);
 const EXTERNAL_URL =
@@ -170,7 +170,7 @@ app.get('/data', async (req: Request, res: Response<DataResponse>, next: NextFun
 app.get('/perf-entries', (req: Request, res: Response) => {
   const entries = collector ? collector.getAndClearSnapshots() : [];
   const runInfo = {
-    pkg: '@perf/server-express',
+    pkg: '@d13z-node-perf/server-express',
     nodeVersion: process.version,
     pid: process.pid,
     timeOrigin: performance.timeOrigin,

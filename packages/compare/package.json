@@ -1,5 +1,5 @@
 {
-  "name": "@perf/compare",
+  "name": "@d13z-node-perf/compare",
   "version": "0.1.0",
   "private": false,
   "type": "module",

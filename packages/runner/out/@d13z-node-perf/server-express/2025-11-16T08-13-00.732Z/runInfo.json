@@ -1,0 +1,8 @@
+{
+  "nodeVersion": "v24.11.0",
+  "collectedAt": "2025-11-16T08:13:03.818Z",
+  "target": "http://localhost:3000",
+  "warmup": 3,
+  "samples": 10,
+  "delayMs": 200
+}

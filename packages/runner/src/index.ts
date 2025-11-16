@@ -1,4 +1,4 @@
-import { writeJson, writeNdjson } from '@perf/shared';
+import { writeJson, writeNdjson } from '@d13z-node-perf/shared';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -50,7 +50,7 @@ async function getJson<T>(url: string): Promise<T> {
 
 async function run(): Promise<void> {
   const opts = parseArgs(process.argv);
-  const pkg = '@perf/server-express';
+  const pkg = '@d13z-node-perf/server-express';
 
   const nowIso = new Date().toISOString().replace(/[:]/g, '-');
   const base = join(opts.outDir, pkg, nowIso);

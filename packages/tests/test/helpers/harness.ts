@@ -14,7 +14,7 @@ export async function waitForServer(url: string, timeoutMs = 10000): Promise<voi
 }
 
 export function startExpressServer(): ChildProcess {
-  const child = spawn('npm', ['run', 'dev', '-w', '@perf/server-express'], {
+  const child = spawn('npm', ['run', 'dev', '-w', '@d13z-node-perf/server-express'], {
     stdio: 'ignore',
     env: process.env,
   });

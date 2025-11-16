@@ -9,10 +9,10 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "typecheck": "npm run typecheck --workspaces",
-    "dev:express": "npm run dev -w @perf/server-express",
-    "dev:shared": "npm run dev -w @perf/shared",
-    "dev:runner": "npm run dev -w @perf/runner",
-    "dev:compare": "npm run dev -w @perf/compare",
+    "dev:express": "npm run dev -w @d13z-node-perf/server-express",
+    "dev:shared": "npm run dev -w @d13z-node-perf/shared",
+    "dev:runner": "npm run dev -w @d13z-node-perf/runner",
+    "dev:compare": "npm run dev -w @d13z-node-perf/compare",
     "test": "npm run test -w @perf/tests"
   },
   "keywords": [],
