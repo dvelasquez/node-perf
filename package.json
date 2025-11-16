@@ -11,7 +11,9 @@
     "typecheck": "npm run typecheck --workspaces",
     "dev:express": "npm run dev -w @perf/server-express",
     "dev:shared": "npm run dev -w @perf/shared",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:runner": "npm run dev -w @perf/runner",
+    "dev:compare": "npm run dev -w @perf/compare",
+    "test": "npm run test -w @perf/tests"
   },
   "keywords": [],
   "author": "",

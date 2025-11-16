@@ -1,3 +1,97 @@
+## What this repo does (TL;DR)
+
+- One monorepo with shared types/helpers to capture Node performance entries.
+- Tiny Express app that exposes `/data` (does an external fetch) and `/perf-entries` (returns/clears perf snapshots).
+- A runner CLI that simulates traffic and saves entries to disk for later comparison.
+- A compare CLI that diffs runs.
+- A node:test suite that spins the server, samples, asserts shapes, and shuts the server down.
+
+## Quick start
+
+1) Install
+
+```bash
+npm install
+```
+
+2) Dev server (Express)
+
+```bash
+npm run dev:express
+# http://localhost:3000/data
+# http://localhost:3000/perf-entries
+```
+
+3) Collect a run
+
+```bash
+npm run dev:runner -- --target http://localhost:3000 --warmup 2 --samples 5 --delayMs 150 --out out
+# Output is saved under: packages/runner/out/@perf/server-express/<timestamp>/
+```
+
+4) Compare two runs
+
+```bash
+npm run dev:compare -- packages/runner/out/@perf/server-express/<A> packages/runner/out/@perf/server-express/<B>
+```
+
+5) Run tests (spawns and kills the server automatically)
+
+```bash
+npm test
+```
+
+## Monorepo layout
+
+- `packages/shared`: `@perf/shared`
+  - Types: `HttpEntrySnapshot`, `ResourceEntrySnapshot`, `MeasureEntrySnapshot`
+  - Helpers: `setupObserver()`, `serializeEntry()`, `writeNdjson()`, `writeJson()`
+- `packages/server-express`: `@perf/server-express`
+  - `GET /data`: fetches `https://jsonplaceholder.typicode.com/todos/1`
+  - `GET /perf-entries`: returns `{ runInfo, entries }` and clears an in‑process buffer
+- `packages/runner`: `@perf/runner` (CLI `perf-runner`)
+  - Warms up, samples `/data`, drains `/perf-entries`, writes NDJSON + summary
+- `packages/compare`: `@perf/compare` (CLI `perf-compare`)
+  - Diffs entry-type counts between two run folders
+- `packages/tests`: `@perf/tests`
+  - node:test based harness that spawns the server, samples, asserts, and stops it
+
+## Capture flow (how it works)
+
+- Each server uses `setupObserver(['http','resource','measure'])` from `@perf/shared`.
+- Incoming entries are serialized to a simple JSON shape (snapshots) and buffered.
+- `/data` hits a third-party mock API via global fetch (undici).
+- `/perf-entries` atomically returns buffered snapshots and clears the buffer so the runner can sample clean batches.
+
+## Artifact format (runner output)
+
+- `entries.ndjson`: one JSON per line with `{ runInfo, entry }`
+- `summary.json`: `{ counts: { http, resource, measure }, total }`
+- `runInfo.json`: environment and run parameters
+
+Example summary:
+
+```json
+{ "counts": { "http": 23, "measure": 13, "resource": 178 }, "total": 214 }
+```
+
+Example NDJSON lines:
+
+```json
+{"runInfo":{...},"entry":{"entryType":"http","name":"HttpRequest",...}}
+{"runInfo":{...},"entry":{"entryType":"measure","name":"fetch https://json...","detail":null,...}}
+{"runInfo":{...},"entry":{"entryType":"resource","initiatorType":"fetch","transferSize":370,...}}
+```
+
+## Using node:test
+
+- `npm test` runs a suite that:
+  - starts `@perf/server-express` as a child process
+  - waits for readiness
+  - performs warmups and samples
+  - asserts presence and shape of `http`, `measure`, `resource` entries
+  - kills the server process reliably at the end
+
 ## Performance Entry Notes
 
 This project spins up a minimal Express server that forwards a request to the mock API at `https://jsonplaceholder.typicode.com/todos/1`. It emits and logs performance data to help answer a few questions:
@@ -205,4 +299,3 @@ toJSON: {
   responseStatus: 200
 }
 ```
-

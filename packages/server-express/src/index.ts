@@ -10,6 +10,9 @@ import {
   type ObservedEntry,
   type ResourceEntry,
   type ResourceEntrySnapshot,
+  setupObserver,
+  serializeEntry,
+  type EntryTypeName,
 } from '@perf/shared';
 
 const PORT = Number.parseInt(process.env.PORT ?? '3000', 10);
@@ -31,13 +34,21 @@ const observedEntryTypes: DesiredEntryType[] = desiredEntryTypes.filter(
 
 console.log('[startup] Supported performance entry types:', supportedEntryTypes);
 
+let collector:
+  | ReturnType<typeof setupObserver>
+  | null = null;
+
 if (observedEntryTypes.length > 0) {
+  collector = setupObserver(observedEntryTypes as EntryTypeName[]);
   const observer = new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
-      logPerformanceEntry(entry);
+      const snap = serializeEntry(entry as any);
+      if (snap) {
+        // Still log raw entry for visibility
+        logPerformanceEntry(entry as any);
+      }
     }
   });
-
   observer.observe({ entryTypes: observedEntryTypes });
 } else {
   console.warn(
@@ -154,6 +165,19 @@ app.get('/data', async (req: Request, res: Response<DataResponse>, next: NextFun
     performance.clearMarks(startMark);
     performance.clearMarks(endMark);
   }
+});
+
+app.get('/perf-entries', (req: Request, res: Response) => {
+  const entries = collector ? collector.getAndClearSnapshots() : [];
+  const runInfo = {
+    pkg: '@perf/server-express',
+    nodeVersion: process.version,
+    pid: process.pid,
+    timeOrigin: performance.timeOrigin,
+    now: performance.now(),
+    externalUrl: EXTERNAL_URL,
+  };
+  res.json({ runInfo, entries });
 });
 
 app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => {
