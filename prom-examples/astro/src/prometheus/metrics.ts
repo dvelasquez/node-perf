@@ -33,14 +33,22 @@ const requestObserverCount = new Counter({
 const resourceObserverDuration = new Histogram({
   name: 'astro_observer_resource_duration_seconds',
   help: 'The duration of resources in seconds',
-  labelNames: ['method', 'path', 'status'],
+  labelNames: ['host', 'path', 'status', 'initiator'],
   registers: [promRegistry],
 });
 const resourceObserverCount = new Counter({
   name: 'astro_observer_resource_count',
   help: 'The number of resources',
-  labelNames: ['method', 'path', 'status'],
+  labelNames: ['host', 'path', 'status', 'initiator'],
   registers: [promRegistry],
 });
 
-export { promRegistry, requestMiddlewareDuration, requestMiddlewareCount, requestObserverDuration, requestObserverCount, resourceObserverDuration, resourceObserverCount };
+export { 
+  promRegistry,
+  requestMiddlewareDuration, 
+  requestMiddlewareCount, 
+  requestObserverDuration, 
+  requestObserverCount, 
+  resourceObserverDuration, 
+  resourceObserverCount 
+};

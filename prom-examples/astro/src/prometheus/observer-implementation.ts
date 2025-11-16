@@ -23,7 +23,7 @@ export function startRequestObserver() {
       }
     }
   });
-  observer.observe({ entryTypes: ['http', 'resource', 'measure'] });
+  observer.observe({ entryTypes: ['http'] });
 }
 
 /**
@@ -36,16 +36,22 @@ export function startResourceObserver() {
     for (const entry of list.getEntries()) {
       if (entry.entryType === 'resource') {
         const resourceEntry = entry as ResourceEntry;
-        console.log(resourceEntry);
+        const url = new URL(resourceEntry.name);
         // record the duration of the resource
         resourceObserverDuration.observe({ 
-          method: resourceEntry.initiatorType, 
-          path: resourceEntry.name,
-          status: resourceEntry.responseStatus
+          host: url.host, 
+          path: url.pathname,
+          status: resourceEntry.responseStatus,
+          initiator: resourceEntry.initiatorType
         }, 
         resourceEntry.duration / 1000);
         // record the number of resources
-        resourceObserverCount.inc({ method: resourceEntry.initiatorType, path: resourceEntry.name });
+        resourceObserverCount.inc({ 
+          host: url.host, 
+          path: url.pathname, 
+          status: resourceEntry.responseStatus, 
+          initiator: resourceEntry.initiatorType 
+        });
       }
     }
   });
