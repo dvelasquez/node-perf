@@ -10,7 +10,7 @@ import {
   type ObservedEntry,
   type ResourceEntry,
   type ResourceEntrySnapshot,
-} from './performance-types.js';
+} from '@perf/shared';
 
 const PORT = Number.parseInt(process.env.PORT ?? '3000', 10);
 const EXTERNAL_URL =
