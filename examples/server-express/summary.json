@@ -1,0 +1,10 @@
+{
+  "counts": {
+    "http": 3,
+    "measure": 2,
+    "resource": 2
+  },
+  "total": 7,
+  "note": "Example only. Real runs vary by environment and timing."
+}
+

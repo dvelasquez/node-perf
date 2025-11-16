@@ -4,3 +4,5 @@ dist
 .next
 .astro
 *.log
+out
+packages/runner/out

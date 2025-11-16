@@ -69,6 +69,10 @@ npm test
 - `summary.json`: `{ counts: { http, resource, measure }, total }`
 - `runInfo.json`: environment and run parameters
 
+Example files (curated, small)
+
+- See `examples/server-express/` for a tiny `entries.ndjson` and `summary.json` you can skim quickly. These are illustrative only; real runs vary by Node version, network, and timing.
+
 Example summary:
 
 ```json
