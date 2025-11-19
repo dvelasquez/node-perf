@@ -1,0 +1,16 @@
+{
+  "name": "astro-with-prometheus",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "NODE_OPTIONS='--import=@d13z-node-perf/prometheus' astro dev",
+    "build": "astro build",
+    "preview": "NODE_OPTIONS='--import=@d13z-node-perf/prometheus' astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/node": "9.5.0",
+    "astro": "5.15.8",
+    "prom-client": "15.1.3"
+  }
+}
