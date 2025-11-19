@@ -2,6 +2,7 @@ import { Counter, Histogram, Registry } from "prom-client";
 
 
 const promRegistry = new Registry();
+
 const requestMiddlewareDuration = new Histogram({
   name: 'astro_middleware_request_duration_seconds',
   help: 'The duration of requests in seconds',

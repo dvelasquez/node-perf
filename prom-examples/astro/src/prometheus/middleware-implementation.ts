@@ -12,18 +12,52 @@ export async function prometheusMiddleware(context: APIContext, next: Middleware
   const startTimestamp = performance.now();
   const response = await next();
   const endTimestamp = performance.now();
-  const duration = (endTimestamp - startTimestamp) / 1000;
+  const durationMs = (endTimestamp - startTimestamp);
+  const durationSeconds = durationMs / 1000;
 
   requestMiddlewareDuration?.observe({ 
     method: context.request.method, 
     path: context.url.pathname, 
     status: response.status 
-  }, duration);
+  }, durationSeconds);
   requestMiddlewareCount?.inc({ 
     method: context.request.method, 
     path: context.url.pathname, 
     status: response.status 
   });
 
-  return response;
+  console.log(`Middleware recorded request start ${context.request.method} ${context.url.pathname} took ${durationMs}ms`);
+
+  const logCompletion = () => {
+    const finalEnd = performance.now();
+    const totalMs = finalEnd - startTimestamp;
+    console.log(`Middleware recorded response streaming end ${context.request.method} ${context.url.pathname} took ${totalMs}ms`);
+  };
+
+  if (!response.body) {
+    logCompletion();
+    return response;
+  }
+
+  const [clientStream, metricsStream] = response.body.tee();
+  const instrumentedResponse = new Response(clientStream, {
+    headers: new Headers(response.headers),
+    status: response.status,
+    statusText: response.statusText,
+  });
+
+  metricsStream
+    .pipeTo(
+      new WritableStream({
+        close() {
+          logCompletion();
+        },
+      }),
+    )
+    .catch((err) => {
+      console.error('Error measuring response stream', err);
+      logCompletion();
+    });
+
+  return instrumentedResponse;
 }
